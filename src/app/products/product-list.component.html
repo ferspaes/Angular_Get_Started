@@ -16,7 +16,7 @@
             <div class="col-md-6">
                 <h6>
                     Filtered by: {{ filterText }}
-                    <button *ngIf='showX()' type="button" class="close" aria-label="Close" style="float: none;"
+                    <button *ngIf='showX()' type="button" class="close" aria-label="Close" id='buttonX'
                             (click)='clearFilterText()'>
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -40,19 +40,19 @@
                         <th>Rating</th>
                     </tr>
                 </thead>
-                <tbody *ngFor='let product of products'>
+                <tbody *ngFor='let product of filteredList'>
                    <tr>
                        <td *ngIf='showImage'>
                            <img  
-                                [src]='product.imageUrl' 
-                                [alt]='product.productName + "-image"'
-                                [title]='product.productName'
+                                [src]='product.imageURL' 
+                                [alt]='product.name + "-image"'
+                                [title]='product.name'
                                 [style.width.px]='imageWidth'
                                 [style.margin.px]='imageMargin'
                             >
                         </td>
-                       <td>{{ product.productName }}</td>
-                       <td>{{ product.productCode | lowercase }}</td>
+                       <td>{{ product.name }}</td>
+                       <td>{{ product.code | lowercase | convertToSpaces: '-' }}</td>
                        <td>{{ product.releaseDate }}</td>
                        <td>{{ product.price | currency: 'USD' : 'symbol' : '1.2-2' | lowercase }}</td>
                        <td>{{ product.starRating }}</td>
