@@ -4,28 +4,35 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-md-2">
+            <div class="mx-sm-3">
                 Filter by:
             </div>
             <div class="col-md-4">
-                <input type="text" />
+                <input type="text" class="form-control form-control-sm" placeholder="Digite algo para filtrar" 
+                        [(ngModel)]='filterText'/>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <h4>Filtered by:</h4>
+                <h6>
+                    Filtered by: {{ filterText }}
+                    <button *ngIf='showX()' type="button" class="close" aria-label="Close" id='buttonX'
+                            (click)='clearFilterText()'>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h6>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table" 
-                *ngIf='products'>
-                <thead>
-                    <tr>
-                        <th>
-                            <button class="btn btn-primary">
-                                Show Image
+        <button class="btn btn-info btn-sm"
+                                    (click)='toggleImage()'>
+                                {{ showImage ? 'Hide' : 'Show'}} Image
                             </button>
-                        </th>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped" 
+                *ngIf='products'>
+                <thead class="thead-dark">
+                    <tr>
+                        <th *ngIf='showImage'>Image</th>
                         <th>Product</th>
                         <th>Code</th>
                         <th>Available</th>
@@ -33,14 +40,23 @@
                         <th>Rating</th>
                     </tr>
                 </thead>
-                <tbody *ngFor='let product of products'>
+                <tbody *ngFor='let product of filteredList'>
                    <tr>
-                       <td><img src="{{ product.imageUrl }}" alt="{{ product.productName }}-image"></td>
-                       <td>{{ product.productName }}</td>
-                       <td>{{ product.productCode }}</td>
-                       <td>Yes</td>
-                       <td>{{ product.price }}</td>
-                       <td>{{ product.starRating }}</td>
+                       <td *ngIf='showImage'>
+                           <img  
+                                [src]='product.imageURL' 
+                                [alt]='product.name + "-image"'
+                                [title]='product.name'
+                                [style.width.px]='imageWidth'
+                                [style.margin.px]='imageMargin'
+                            >
+                        </td>
+                       <td>{{ product.name }}</td>
+                       <td>{{ product.code | lowercase | convertToSpaces: '-' }}</td>
+                       <td>{{ product.releaseDate }}</td>
+                       <td>{{ product.price | currency: 'USD' : 'symbol' : '1.2-2' | lowercase }}</td>
+                       <td><pm-star [rating]='product.starRating'
+                                    (ratingClicked)='onRatingClicked($event)'></pm-star></td>
                    </tr>
                 </tbody>
             </table>
